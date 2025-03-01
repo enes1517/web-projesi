@@ -69,5 +69,23 @@ namespace webGiris.Controllers
 
 
         }
+        [HttpDelete("{id:int}")]
+        public ActionResult DeleteOneBook([FromRoute] int id)
+        {
+            var entity=ApplicationContext.Books.Find(b=>b.Id.Equals(id));
+
+            if(entity is null )
+                return NotFound(new
+                {
+                    StatusCode=404,
+                    message=$"Book with id:{id} could not found. "
+
+                });
+
+            ApplicationContext.Books.Remove(entity);
+            return NoContent();
+
+        }
+
     }
 }
