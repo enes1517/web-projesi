@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.OpenApi.Any;
@@ -85,6 +86,17 @@ namespace webGiris.Controllers
             ApplicationContext.Books.Remove(entity);
             return NoContent();
 
+        }
+        [HttpPatch("{id:int}")]
+        public ActionResult PartiallyUpdateOneBook([FromRoute]int id,[FromBody] JsonPatchDocument<Book> bookpatch)
+        {
+            var entity=ApplicationContext.Books.Find(b=>b.Id.Equals(id));
+
+            if( entity is null )
+                return NotFound() ;
+
+            bookpatch.ApplyTo(entity);
+            return NoContent();
         }
 
     }
